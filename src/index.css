@@ -220,6 +220,9 @@ input, select {
 .filters-sidebar {
   width: 272px;
   flex-shrink: 0;
+  position: sticky;
+  top: 84px; /* Keep it perfectly below the 68px sticky header */
+  align-self: flex-start; /* Crucial so it does not stretch vertically */
 }
 
 .filters-card {
