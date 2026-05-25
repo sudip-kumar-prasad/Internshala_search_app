@@ -340,12 +340,47 @@ input, select {
 }
 
 .stipend-slider {
+  -webkit-appearance: none;
+  appearance: none;
   width: 100%;
-  accent-color: #008BDC;
+  height: 5px;
+  border-radius: 3px;
+  outline: none;
   cursor: pointer;
-  height: 4px;
-  background: #dee2e6;
-  border-radius: 2px;
+}
+
+/* Chrome, Safari, Opera, Edge */
+.stipend-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 5px solid #008BDC;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: transform 0.1s ease;
+}
+
+.stipend-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+/* Firefox */
+.stipend-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 5px solid #008BDC;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: transform 0.1s ease;
+}
+
+.stipend-slider::-moz-range-thumb:hover {
+  transform: scale(1.1);
 }
 
 .stipend-range-labels {

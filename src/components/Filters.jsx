@@ -1,6 +1,17 @@
 import React from 'react';
 import { useFilters } from '../context/FilterContext';
-import { FiFilter, FiSearch, FiChevronDown, FiX } from 'react-icons/fi';
+import { FiSearch, FiChevronDown, FiX } from 'react-icons/fi';
+
+const CustomFilterIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '8px', marginTop: '1px' }}>
+    {/* Funnel shape path */}
+    <path d="M3 4H21V6.5L14 13.5V19.5L10 21.5V13.5L3 6.5V4Z" stroke="#008BDC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+    {/* Checkmark circle badge overlay */}
+    <circle cx="17" cy="7" r="4.5" fill="#008BDC" stroke="#FFFFFF" strokeWidth="1" />
+    {/* White checkmark inside the circle */}
+    <path d="M15.5 7L16.5 8L18.5 6" stroke="#FFFFFF" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
 
 const Filters = () => {
   const {
@@ -35,11 +46,9 @@ const Filters = () => {
       {/* Primary Filters Card */}
       <div className="filters-card">
         {/* Header Title with Blue Funnel Icon */}
-        <div className="filters-header" style={{ justifyContent: 'center', position: 'relative' }}>
-          <div className="filters-title-icon">
-            <FiFilter />
-          </div>
-          <span style={{ fontSize: '13.5px', fontWeight: '700', letterSpacing: '0.5px', color: '#484848' }}>Filters</span>
+        <div className="filters-header" style={{ justifyContent: 'center', display: 'flex', alignItems: 'center', marginBottom: '18px' }}>
+          <CustomFilterIcon />
+          <span style={{ fontSize: '15px', fontWeight: '700', color: '#212529' }}>Filters</span>
         </div>
 
         {/* Checkbox: As per my preferences */}
@@ -138,15 +147,18 @@ const Filters = () => {
               step="2000"
               value={stipend > 10000 ? 10000 : stipend}
               onChange={(e) => setStipend(Number(e.target.value))}
+              style={{
+                background: `linear-gradient(to right, #008BDC 0%, #008BDC ${(stipend / 10000) * 100}%, #e0e0e0 ${(stipend / 10000) * 100}%, #e0e0e0 100%)`
+              }}
             />
           </div>
           <div className="stipend-range-labels">
-            <span>0</span>
-            <span>2K</span>
-            <span>4K</span>
-            <span>6K</span>
-            <span>8K</span>
-            <span>10K</span>
+            <span style={stipend === 0 ? { color: '#212529', fontWeight: '700' } : { color: '#888888' }}>0</span>
+            <span style={stipend === 2000 ? { color: '#212529', fontWeight: '700' } : { color: '#888888' }}>2K</span>
+            <span style={stipend === 4000 ? { color: '#212529', fontWeight: '700' } : { color: '#888888' }}>4K</span>
+            <span style={stipend === 6000 ? { color: '#212529', fontWeight: '700' } : { color: '#888888' }}>6K</span>
+            <span style={stipend === 8000 ? { color: '#212529', fontWeight: '700' } : { color: '#888888' }}>8K</span>
+            <span style={stipend === 10000 ? { color: '#212529', fontWeight: '700' } : { color: '#888888' }}>10K</span>
           </div>
         </div>
 
