@@ -105,10 +105,22 @@ function SearchDashboard() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch("https://internshala.com/hiring/search");
-        if (!response.ok) {
-          throw new Error("API call failed");
+        // Attempt to fetch from local proxied endpoint first to bypass CORS, fall back to direct if needed
+        let response;
+        try {
+          response = await fetch("/api/hiring/search");
+          if (!response.ok) {
+            throw new Error("Local proxy call failed");
+          }
+        } catch (err) {
+          console.warn("Proxy fetch failed, trying direct endpoint...", err);
+          response = await fetch("https://internshala.com/hiring/search");
         }
+
+        if (!response.ok) {
+          throw new Error("Both proxy and direct fetch failed");
+        }
+        
         const data = await response.json();
         
         // Parse custom Internshala response format: keys to array mapper
@@ -116,9 +128,9 @@ function SearchDashboard() {
         const items = ids.map(id => data.internships_meta[id]).filter(Boolean);
         
         if (items.length > 0) {
-          // Merge API items with Basti Ki Pathshala & NayePankh Foundation mocks to guarantee they show at the top!
-          const merged = [...fallbackInternships.slice(0, 4), ...items, ...fallbackInternships.slice(4)];
-          // Remove duplicate IDs if any
+          // Put the live fetched data at the very top, followed by mock data as fallback/additional items
+          const merged = [...items, ...fallbackInternships];
+          // Remove duplicate IDs if any (keeping the first occurrence, which will be the live ones)
           const seen = new Set();
           const unique = merged.filter(item => {
             if (seen.has(item.id)) return false;

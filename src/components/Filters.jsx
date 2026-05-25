@@ -178,7 +178,7 @@ const Filters = () => {
       </div>
 
       {/* Separate Keyword Search Card */}
-      <div className={`keyword-search-card ${preferences ? 'disabled' : ''}`}>
+      <div className="keyword-search-card">
         <div className="keyword-card-title">Keyword Search</div>
         <div className="keyword-row">
           <input
@@ -188,7 +188,6 @@ const Filters = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="e.g. Design, Mumbai, Infosys"
             style={{ flex: 1 }}
-            disabled={preferences}
           />
           {searchQuery ? (
             <button
@@ -197,7 +196,6 @@ const Filters = () => {
               onClick={() => setSearchQuery('')}
               style={{ backgroundColor: '#f44336' }}
               title="Clear Search"
-              disabled={preferences}
             >
               <FiX />
             </button>
@@ -206,8 +204,6 @@ const Filters = () => {
               type="button"
               className="keyword-btn-search"
               title="Search"
-              disabled={preferences}
-              style={preferences ? { backgroundColor: '#F5F5F5', color: '#9E9E9E', cursor: 'not-allowed', border: '1px solid #dee2e6' } : {}}
             >
               <FiSearch />
             </button>
