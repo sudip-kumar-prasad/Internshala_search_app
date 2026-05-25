@@ -10,6 +10,8 @@ export const FilterProvider = ({ children }) => {
   const [stipend, setStipend] = useState(0);
   const [duration, setDuration] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [preferences, setPreferences] = useState(false);
+  const [inMyCity, setInMyCity] = useState(false);
 
   const clearAllFilters = useCallback(() => {
     setProfile('');
@@ -19,6 +21,8 @@ export const FilterProvider = ({ children }) => {
     setStipend(0);
     setDuration('');
     setSearchQuery('');
+    setPreferences(false);
+    setInMyCity(false);
   }, []);
 
   const value = {
@@ -36,6 +40,10 @@ export const FilterProvider = ({ children }) => {
     setDuration,
     searchQuery,
     setSearchQuery,
+    preferences,
+    setPreferences,
+    inMyCity,
+    setInMyCity,
     clearAllFilters,
   };
 

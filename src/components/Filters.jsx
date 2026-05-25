@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFilters } from '../context/FilterContext';
-import { FiFilter, FiSearch, FiX } from 'react-icons/fi';
+import { FiFilter, FiSearch, FiChevronDown, FiX } from 'react-icons/fi';
 
 const Filters = () => {
   const {
@@ -18,6 +18,10 @@ const Filters = () => {
     setDuration,
     searchQuery,
     setSearchQuery,
+    preferences,
+    setPreferences,
+    inMyCity,
+    setInMyCity,
     clearAllFilters,
   } = useFilters();
 
@@ -30,16 +34,26 @@ const Filters = () => {
     <div className="filters-sidebar">
       {/* Primary Filters Card */}
       <div className="filters-card">
-        <div className="filters-header">
-          <div className="filters-title">
+        {/* Header Title with Blue Funnel Icon */}
+        <div className="filters-header" style={{ justifyContent: 'center', position: 'relative' }}>
+          <div className="filters-title-icon">
             <FiFilter />
-            <span>Filters</span>
           </div>
-          {(profile || location || wfh || partTime || stipend > 0 || duration || searchQuery) && (
-            <button type="button" className="clear-all-btn" onClick={handleClearAll}>
-              Clear all
-            </button>
-          )}
+          <span style={{ fontSize: '13.5px', fontWeight: '700', letterSpacing: '0.5px', color: '#484848' }}>Filters</span>
+        </div>
+
+        {/* Checkbox: As per my preferences */}
+        <div className="filter-group">
+          <label className="filter-checkbox">
+            <input
+              type="checkbox"
+              checked={preferences}
+              onChange={(e) => setPreferences(e.target.checked)}
+            />
+            <span>
+              As per my <a href="#preferences" onClick={(e) => e.preventDefault()}>preferences</a>
+            </span>
+          </label>
         </div>
 
         {/* Profile Filter */}
@@ -50,7 +64,7 @@ const Filters = () => {
             className="filter-input"
             value={profile}
             onChange={(e) => setProfile(e.target.value)}
-            placeholder="e.g. Web Development"
+            placeholder="e.g. Marketing"
           />
         </div>
 
@@ -62,21 +76,30 @@ const Filters = () => {
             className="filter-input"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            placeholder="e.g. Gurgaon, Bangalore"
+            placeholder="e.g. Delhi"
             disabled={wfh}
-            style={wfh ? { backgroundColor: '#f0f0f0', cursor: 'not-allowed', color: '#888' } : {}}
+            style={wfh ? { backgroundColor: '#f5f5f5', cursor: 'not-allowed', color: '#aaa' } : {}}
           />
         </div>
 
-        {/* Checkbox Filters */}
-        <div className="filter-group" style={{ marginTop: '20px' }}>
+        {/* Checkboxes: Internships in my city, Work from home, Part-time */}
+        <div className="filter-group" style={{ margin: '20px 0 16px' }}>
+          <label className="filter-checkbox">
+            <input
+              type="checkbox"
+              checked={inMyCity}
+              onChange={(e) => setInMyCity(e.target.checked)}
+            />
+            <span>Internships in my city</span>
+          </label>
+
           <label className="filter-checkbox">
             <input
               type="checkbox"
               checked={wfh}
               onChange={(e) => {
                 setWfh(e.target.checked);
-                if (e.target.checked) setLocation(''); // clear location if WFH selected
+                if (e.target.checked) setLocation(''); // Clear location if WFH
               }}
             />
             <span>Work from home</span>
@@ -92,76 +115,71 @@ const Filters = () => {
           </label>
         </div>
 
-        <div className="filter-divider"></div>
-
-        {/* Duration Filter */}
-        <div className="filter-group">
-          <label className="filter-label">Desired maximum duration (in months)</label>
-          <select
-            className="filter-input"
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-          >
-            <option value="">Choose duration</option>
-            <option value="1">1 Month</option>
-            <option value="2">2 Months</option>
-            <option value="3">3 Months</option>
-            <option value="4">4 Months</option>
-            <option value="6">6 Months</option>
-            <option value="12">12 Months</option>
-          </select>
-        </div>
-
-        <div className="filter-divider"></div>
-
-        {/* Stipend Filter */}
+        {/* Stipend Custom Slider (0 - 10K to match screenshot exactly) */}
         <div className="filter-group">
           <label className="stipend-label">
-            Minimum stipend (₹): <span style={{ color: '#083d77', fontWeight: '700' }}>{stipend > 0 ? `₹${stipend.toLocaleString()}` : 'Any'}</span>
+            Desired minimum monthly stipend (₹)
           </label>
-          <input
-            type="range"
-            className="stipend-slider"
-            min="0"
-            max="50000"
-            step="2000"
-            value={stipend}
-            onChange={(e) => setStipend(Number(e.target.value))}
-          />
+          <div className="stipend-slider-wrapper">
+            <input
+              type="range"
+              className="stipend-slider"
+              min="0"
+              max="10000"
+              step="2000"
+              value={stipend > 10000 ? 10000 : stipend}
+              onChange={(e) => setStipend(Number(e.target.value))}
+            />
+          </div>
           <div className="stipend-range-labels">
             <span>0</span>
-            <span>10k</span>
-            <span>20k</span>
-            <span>30k</span>
-            <span>40k</span>
-            <span>50k</span>
+            <span>2K</span>
+            <span>4K</span>
+            <span>6K</span>
+            <span>8K</span>
+            <span>10K</span>
           </div>
         </div>
+
+        {/* View More Filters */}
+        <div className="view-more-link">
+          <span>View more filters</span>
+          <FiChevronDown style={{ fontSize: '12px' }} />
+        </div>
+
+        {/* Clear All Link at bottom right */}
+        {(profile || location || wfh || partTime || stipend > 0 || searchQuery || preferences || inMyCity) && (
+          <span className="clear-all-link" onClick={handleClearAll}>
+            Clear all
+          </span>
+        )}
+        <div style={{ clear: 'both' }}></div>
       </div>
 
-      {/* Keyword Search Card */}
-      <div className="keyword-card">
-        <div className="keyword-title">Search by Keywords</div>
-        <div className="keyword-input-wrapper">
+      {/* Separate Keyword Search Card */}
+      <div className="keyword-search-card">
+        <div className="keyword-card-title">Keyword Search</div>
+        <div className="keyword-row">
           <input
             type="text"
-            className="keyword-input"
+            className="filter-input"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="e.g. Design, Google, Java"
+            placeholder="e.g. Design, Mumbai, Infosys"
+            style={{ flex: 1 }}
           />
           {searchQuery ? (
             <button
               type="button"
-              className="keyword-btn"
+              className="keyword-btn-search"
               onClick={() => setSearchQuery('')}
-              style={{ background: '#f44336' }}
+              style={{ backgroundColor: '#f44336' }}
               title="Clear Search"
             >
               <FiX />
             </button>
           ) : (
-            <button type="button" className="keyword-btn" title="Search">
+            <button type="button" className="keyword-btn-search" title="Search">
               <FiSearch />
             </button>
           )}
@@ -172,4 +190,5 @@ const Filters = () => {
 };
 
 export default Filters;
+
 
