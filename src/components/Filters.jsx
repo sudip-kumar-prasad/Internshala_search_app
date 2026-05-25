@@ -57,7 +57,7 @@ const Filters = () => {
         </div>
 
         {/* Profile Filter */}
-        <div className="filter-group">
+        <div className={`filter-group ${preferences ? 'disabled' : ''}`}>
           <label className="filter-label">Profile</label>
           <input
             type="text"
@@ -65,11 +65,12 @@ const Filters = () => {
             value={profile}
             onChange={(e) => setProfile(e.target.value)}
             placeholder="e.g. Marketing"
+            disabled={preferences}
           />
         </div>
 
         {/* Location Filter */}
-        <div className="filter-group">
+        <div className={`filter-group ${preferences ? 'disabled' : ''}`}>
           <label className="filter-label">Location</label>
           <input
             type="text"
@@ -77,23 +78,24 @@ const Filters = () => {
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             placeholder="e.g. Delhi"
-            disabled={wfh}
-            style={wfh ? { backgroundColor: '#f5f5f5', cursor: 'not-allowed', color: '#aaa' } : {}}
+            disabled={wfh || preferences}
+            style={(wfh || preferences) ? { backgroundColor: '#f9f9f9', cursor: 'not-allowed', color: '#b0b0b0' } : {}}
           />
         </div>
 
         {/* Checkboxes: Internships in my city, Work from home, Part-time */}
         <div className="filter-group" style={{ margin: '20px 0 16px' }}>
-          <label className="filter-checkbox">
+          <label className={`filter-checkbox ${preferences ? 'disabled' : ''}`}>
             <input
               type="checkbox"
               checked={inMyCity}
               onChange={(e) => setInMyCity(e.target.checked)}
+              disabled={preferences}
             />
             <span>Internships in my city</span>
           </label>
 
-          <label className="filter-checkbox">
+          <label className={`filter-checkbox ${preferences ? 'disabled' : ''}`}>
             <input
               type="checkbox"
               checked={wfh}
@@ -101,15 +103,17 @@ const Filters = () => {
                 setWfh(e.target.checked);
                 if (e.target.checked) setLocation(''); // Clear location if WFH
               }}
+              disabled={preferences}
             />
             <span>Work from home</span>
           </label>
 
-          <label className="filter-checkbox">
+          <label className={`filter-checkbox ${preferences ? 'disabled' : ''}`}>
             <input
               type="checkbox"
               checked={partTime}
               onChange={(e) => setPartTime(e.target.checked)}
+              disabled={preferences}
             />
             <span>Part-time</span>
           </label>

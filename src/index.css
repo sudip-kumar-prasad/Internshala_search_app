@@ -251,6 +251,18 @@ input, select {
   margin-bottom: 16px;
 }
 
+.filter-group.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.filter-group.disabled .filter-input {
+  background-color: #f9f9f9;
+  border-color: #e2e5e8;
+  color: #b0b0b0;
+  cursor: not-allowed;
+}
+
 .filter-label {
   font-size: 13px;
   font-weight: 500;
@@ -289,6 +301,12 @@ input, select {
   cursor: pointer;
   user-select: none;
   font-weight: 400;
+}
+
+.filter-checkbox.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
 }
 
 .filter-checkbox input[type='checkbox'] {

@@ -97,6 +97,7 @@ function SearchDashboard() {
     partTime,
     stipend,
     searchQuery,
+    preferences,
   } = useFilters();
 
   // Fetch data on mount
@@ -116,7 +117,7 @@ function SearchDashboard() {
         
         if (items.length > 0) {
           // Merge API items with Basti Ki Pathshala & NayePankh Foundation mocks to guarantee they show at the top!
-          const merged = [...fallbackInternships.slice(0, 3), ...items, ...fallbackInternships.slice(3)];
+          const merged = [...fallbackInternships.slice(0, 4), ...items, ...fallbackInternships.slice(4)];
           // Remove duplicate IDs if any
           const seen = new Set();
           const unique = merged.filter(item => {
@@ -141,41 +142,52 @@ function SearchDashboard() {
   // Comprehensive client-side filtering logic
   const filteredInternships = useMemo(() => {
     return internships.filter((item) => {
-      // 1. Profile Filter
-      if (profile) {
-        const pQuery = profile.toLowerCase();
-        const titleMatches = item.title ? item.title.toLowerCase().includes(pQuery) : false;
-        const profileMatches = item.profile_name ? item.profile_name.toLowerCase().includes(pQuery) : false;
-        if (!titleMatches && !profileMatches) return false;
+      // If preferences is active, we ignore profile/location/wfh/part-time inputs as they are disabled in UI
+      if (!preferences) {
+        // 1. Profile Filter
+        if (profile) {
+          const pQuery = profile.toLowerCase();
+          const titleMatches = item.title ? item.title.toLowerCase().includes(pQuery) : false;
+          const profileMatches = item.profile_name ? item.profile_name.toLowerCase().includes(pQuery) : false;
+          if (!titleMatches && !profileMatches) return false;
+        }
+
+        // 2. Location Filter
+        if (location && !wfh) {
+          const lQuery = location.toLowerCase();
+          const locationMatches = item.location_names
+            ? item.location_names.some((name) => name.toLowerCase().includes(lQuery))
+            : false;
+          if (!locationMatches) return false;
+        }
+
+        // 3. Work From Home Filter
+        if (wfh && !item.work_from_home) {
+          return false;
+        }
+
+        // 4. Part-time Filter
+        if (partTime && !item.part_time) {
+          return false;
+        }
+      } else {
+        // When preferences is enabled, we only display internships matching user's preferred roles: SDE, Web, Front End, AI, Data Science, Android
+        const preferredKeywords = ["web", "software", "front end", "ai", "artificial intelligence", "data science", "android", "developer", "development"];
+        const title = item.title ? item.title.toLowerCase() : "";
+        const profileName = item.profile_name ? item.profile_name.toLowerCase() : "";
+        const matchesPreferred = preferredKeywords.some(keyword => 
+          title.includes(keyword) || profileName.includes(keyword)
+        );
+        if (!matchesPreferred) return false;
       }
 
-      // 2. Location Filter
-      if (location && !wfh) {
-        const lQuery = location.toLowerCase();
-        const locationMatches = item.location_names
-          ? item.location_names.some((name) => name.toLowerCase().includes(lQuery))
-          : false;
-        if (!locationMatches) return false;
-      }
-
-      // 3. Work From Home Filter
-      if (wfh && !item.work_from_home) {
-        return false;
-      }
-
-      // 4. Part-time Filter
-      if (partTime && !item.part_time) {
-        return false;
-      }
-
-      // 5. Stipend Filter (minimum stipend amount)
+      // 5. Stipend Filter (minimum stipend amount) - active even in preferences mode
       if (stipend > 0) {
-        // If unpaid, stipend amount is 0, so if stipend slider > 0, unpaid will be filtered out!
         const salaryVal = item.stipend ? item.stipend.salaryValue1 : 0;
         if (salaryVal < stipend) return false;
       }
 
-      // 6. General Keyword Search (Query matching multiple fields)
+      // 6. General Keyword Search (Query matching multiple fields) - active even in preferences mode
       if (searchQuery) {
         const sQuery = searchQuery.toLowerCase();
         const titleMatches = item.title ? item.title.toLowerCase().includes(sQuery) : false;
@@ -189,7 +201,7 @@ function SearchDashboard() {
 
       return true;
     });
-  }, [internships, profile, location, wfh, partTime, stipend, searchQuery]);
+  }, [internships, profile, location, wfh, partTime, stipend, searchQuery, preferences]);
 
   return (
     <div className="page-wrapper">

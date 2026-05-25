@@ -11,9 +11,63 @@ import {
 } from 'react-icons/fi';
 import { useFilters } from '../context/FilterContext';
 
-// Authentic Logo component with building placeholder fallback
+// Authentic Logo component with custom branding and building fallback
 const CompanyLogo = ({ logoName, companyName }) => {
   const [imageError, setImageError] = useState(false);
+
+  // Render high fidelity custom SVG logo depending on company name for replication realism
+  if (companyName === "Emoolar Technology Private Limited") {
+    return (
+      <div className="card-logo-container" style={{ borderColor: '#E0E0E0', backgroundColor: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <svg width="34" height="34" viewBox="0 0 100 100">
+          {/* Cursive, elegant lowercase e mimicking the handwriting logo */}
+          <path d="M70,40 C70,30 62,22 50,22 C32,22 24,40 24,56 C24,72 35,80 50,80 C68,80 76,60 76,54 L68,54 C68,58 62,72 50,72 C40,72 34,66 34,56 C34,46 42,30 50,30 C58,30 62,36 62,44 C62,48 58,50 42,50 C44,60 52,62 60,62 C66,62 70,58 70,54 Z M42,42 C50,42 54,42 54,38 C54,34 50,30 46,30 C42,30 42,38 42,42 Z" fill="#000000" />
+        </svg>
+      </div>
+    );
+  }
+
+  if (companyName === "Primetrade.ai") {
+    return (
+      <div className="card-logo-container" style={{ borderColor: '#E0E0E0', backgroundColor: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2px' }}>
+        <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Shield logo with geometric PT letters */}
+          <path d="M50 12 L82 26 V58 C82 72 68 84 50 88 C32 84 18 72 18 58 V26 L50 12 Z" fill="#1C3D5A" />
+          <path d="M50 18 L76 30 V54 C76 66 64 76 50 80 C36 76 24 66 24 54 V30 L50 18 Z" fill="#008BDC" />
+          <text x="50" y="56" fontFamily="'Inter', sans-serif" fontSize="22" fontWeight="900" fill="#FFFFFF" textAnchor="middle">PT</text>
+        </svg>
+      </div>
+    );
+  }
+
+  if (companyName === "NayePankh Foundation") {
+    return (
+      <div className="card-logo-container" style={{ borderColor: '#E0E0E0', backgroundColor: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px' }}>
+        <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Wing/Feather abstract logo */}
+          <circle cx="50" cy="50" r="42" fill="#E8F5E9" />
+          <path d="M50 20 C65 20 75 35 75 50 C75 65 65 80 50 80 C35 80 25 65 25 50 C25 35 35 20 50 20 Z" fill="#81C784" />
+          <path d="M50 30 C58 30 65 40 65 50 C65 60 58 70 50 70 C42 70 35 60 35 50 C35 40 42 30 50 30 Z" fill="#2E7D32" />
+          <circle cx="50" cy="50" r="8" fill="#FFF" />
+        </svg>
+      </div>
+    );
+  }
+
+  if (companyName === "Basti Ki Pathshala Foundation") {
+    return (
+      <div className="card-logo-container" style={{ borderColor: '#E0E0E0', backgroundColor: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px' }}>
+        <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Graduation cap / NGO education logo */}
+          <circle cx="50" cy="50" r="42" fill="#E3F2FD" />
+          <path d="M50 25 L80 40 L50 55 L20 40 L50 25 Z" fill="#1565C0" />
+          <path d="M30 46 V64 C30 70 40 75 50 75 C60 75 70 70 70 64 V46" fill="none" stroke="#1565C0" strokeWidth="6" />
+          <path d="M80 40 V65" fill="none" stroke="#FFB300" strokeWidth="4" />
+          <circle cx="80" cy="65" r="5" fill="#FFB300" />
+        </svg>
+      </div>
+    );
+  }
 
   if (logoName && !imageError) {
     return (
@@ -143,53 +197,38 @@ const InternshipCard = memo(({ internship }) => {
   );
 });
 
-// Authentic ticking promo training card matching the screenshot
+// Promoted course card matching the screenshot layout
 const PromoCard = () => {
-  const [seconds, setSeconds] = useState(131); // 2m 11s
-
-  useEffect(() => {
-    if (seconds <= 0) return;
-    const intervalId = setInterval(() => {
-      setSeconds((prev) => prev - 1);
-    }, 1000);
-    return () => clearInterval(intervalId);
-  }, [seconds]);
-
-  const formatTime = (totalSecs) => {
-    const hrs = String(Math.floor(totalSecs / 3600)).padStart(2, '0');
-    const mins = String(Math.floor((totalSecs % 3600) / 60)).padStart(2, '0');
-    const secs = String(totalSecs % 60).padStart(2, '0');
-    return `${hrs}h: ${mins}m: ${secs}s`;
-  };
-
   return (
-    <div className="promo-card">
-      <span className="promo-tag-offer">OFFER</span>
-      <h3 className="promo-title">Get Internship and Job Preparation training FREE!</h3>
-      <p className="promo-subtitle">By enrolling in trainings at 55% + 10% OFF!</p>
+    <div className="promo-card" style={{ border: '1px solid #dee2e6', borderRadius: '8px', padding: '20px', backgroundColor: '#ffffff', marginBottom: '16px', position: 'relative' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+        <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#212529', margin: 0 }}>
+          Get hired for Web Development <span style={{ color: '#888888', fontWeight: '400', fontSize: '13px', marginLeft: '4px' }}>• Promoted</span>
+        </h3>
+      </div>
+      
+      <div style={{ display: 'inline-block', backgroundColor: '#FFF3CD', border: '1px solid #FFE8A1', color: '#856404', fontSize: '11px', fontWeight: '600', padding: '3.5px 10px', borderRadius: '4px', marginBottom: '15px' }}>
+        Online Course with Placement Assistance
+      </div>
 
-      <div className="promo-details-row">
-        <div className="promo-detail-item">
-          <FiZap />
-          <span>
-            Use coupon: <strong>GD10</strong>
-          </span>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#555555' }}>
+          <FiZap style={{ color: '#ffb300', strokeWidth: '2.5' }} />
+          <span>Upskill & stand out as <strong>top applicant</strong></span>
         </div>
-        <div className="promo-detail-item">
-          <FiClock />
-          <span>Offer ends in {formatTime(seconds)}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#555555' }}>
+          <FiFileText style={{ color: '#008BDC' }} />
+          <span>Get <strong>priority access</strong> to top opportunities</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#555555' }}>
+          <FiZap style={{ color: '#2e7d32' }} />
+          <span><strong>Role specific</strong> Unlimited mock AI interviews</span>
         </div>
       </div>
 
-      <div className="promo-recommendation">
-        Course recommended for SUDIP KUMAR:{' '}
-        <strong style={{ color: '#008BDC' }}>Full Stack Web Development with AI</strong>
-      </div>
-
-      <div className="promo-footer">
-        <span className="promo-badge-certified">Government Certified Trainings</span>
-        <a href="#enroll" className="promo-btn-enroll" onClick={(e) => e.preventDefault()}>
-          <span>Enroll now</span>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid #f1f3f5', paddingTop: '12px' }}>
+        <a href="#enroll" className="promo-btn-enroll" style={{ color: '#008BDC', fontSize: '13.5px', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }} onClick={(e) => e.preventDefault()}>
+          <span>Apply now</span>
           <FiChevronRight />
         </a>
       </div>

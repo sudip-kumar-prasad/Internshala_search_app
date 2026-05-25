@@ -1,6 +1,67 @@
 export const fallbackInternships = [
   {
-    id: 10001,
+    id: 101,
+    title: "Software Development Engineering (Web)",
+    company_name: "Emoolar Technology Private Limited",
+    company_logo: "",
+    work_from_home: true,
+    location_names: [],
+    duration: "6 Months",
+    stipend: {
+      salary: "₹ 3,500 - 6,000 /month",
+      salaryValue1: 3500,
+    },
+    start_date: "Starts Immediately",
+    posted_by_label: "1 day ago",
+    is_ppo: true,
+    ppo_label_value: "Job offer upto ₹ 3.1LPA post internship",
+    part_time: true,
+    description: "Collaborate on web application design, development, maintenance, and optimization using HTML...",
+    skills: ["HTML", "CSS", "JavaScript"]
+  },
+  {
+    id: 102,
+    title: "AI Agent Development",
+    company_name: "Primetrade.ai",
+    company_logo: "",
+    work_from_home: true,
+    location_names: [],
+    duration: "6 Months",
+    stipend: {
+      salary: "₹ 10,000 /month",
+      salaryValue1: 10000,
+    },
+    start_date: "Starts Immediately",
+    posted_by_label: "Today",
+    is_ppo: true,
+    ppo_label_value: "Job offer starting ₹ 3LPA post internship",
+    is_early_applicant: true,
+    part_time: false,
+    description: "Build tool-using agent workflows and implement tool wrappers with retries, timeouts, validation, ...",
+    skills: ["Python", "Software Testing"]
+  },
+  {
+    id: 103,
+    title: "Front End Development",
+    company_name: "NayePankh Foundation",
+    company_logo: "",
+    work_from_home: true,
+    location_names: [],
+    duration: "1 Week",
+    stipend: {
+      salary: "Unpaid",
+      salaryValue1: 0,
+    },
+    start_date: "Starts Immediately",
+    posted_by_label: "Few hours ago",
+    is_ppo: true,
+    ppo_label_value: "Job offer post internship",
+    part_time: true,
+    description: "Design and develop interactive web applications using HTML, create responsive designs, and opt...",
+    skills: ["HTML", "CSS", "JavaScript"]
+  },
+  {
+    id: 104,
     title: "Web Development",
     company_name: "Basti Ki Pathshala Foundation",
     company_logo: "",
@@ -17,46 +78,6 @@ export const fallbackInternships = [
     ppo_label_value: "Job offer post internship",
     part_time: true,
     description: "Assist in website creation, maintenance, optimization, and troubleshooting for the organization",
-    skills: ["HTML"]
-  },
-  {
-    id: 10002,
-    title: "Artificial Intelligence (AI)",
-    company_name: "NayePankh Foundation",
-    company_logo: "",
-    work_from_home: true,
-    location_names: [],
-    duration: "1 Month",
-    stipend: {
-      salary: "Unpaid",
-      salaryValue1: 0,
-    },
-    start_date: "Starts Immediately",
-    posted_by_label: "Few hours ago",
-    is_ppo: true,
-    ppo_label_value: "Job offer post internship",
-    part_time: true,
-    description: "Develop and implement AI algorithms, conduct research, and integrate solutions using ChatGPT, Claude, and Gemini",
-    skills: ["Artificial intelligence", "ChatGPT", "Claude", "Gemini"]
-  },
-  {
-    id: 10003,
-    title: "Front End Development",
-    company_name: "Basti Ki Pathshala Foundation",
-    company_logo: "",
-    work_from_home: true,
-    location_names: [],
-    duration: "1 Month",
-    stipend: {
-      salary: "Unpaid",
-      salaryValue1: 0,
-    },
-    start_date: "Starts Immediately",
-    posted_by_label: "Few hours ago",
-    is_ppo: true,
-    ppo_label_value: "Job offer post internship",
-    part_time: true,
-    description: "Collaborate with design team to implement website mockups using HTML, ensuring responsive layouts and perfect design integration",
     skills: ["HTML", "CSS", "JavaScript"]
   },
   {
@@ -98,25 +119,5 @@ export const fallbackInternships = [
     part_time: false,
     description: "Develop robust frontend components using React 19, maintain API endpoints, and collaborate closely with product design.",
     skills: ["React", "JavaScript", "CSS", "Node.js"]
-  },
-  {
-    id: 65517,
-    title: "UI/UX Design Intern",
-    company_name: "Netflix",
-    company_logo: "",
-    work_from_home: false,
-    location_names: ["Mumbai", "Bangalore"],
-    duration: "4 Months",
-    stipend: {
-      salary: "₹ 35,000 /month",
-      salaryValue1: 35000,
-    },
-    start_date: "Starts Immediately",
-    posted_by_label: "Yesterday",
-    is_ppo: false,
-    ppo_label_value: null,
-    part_time: false,
-    description: "Conduct high-fidelity user research, design wireframes in Figma, and build premium prototype flows.",
-    skills: ["Figma", "UI/UX", "Prototyping", "User Research"]
   }
 ];
