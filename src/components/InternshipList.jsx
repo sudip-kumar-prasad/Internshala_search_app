@@ -69,6 +69,19 @@ const CompanyLogo = ({ logoName, companyName }) => {
     );
   }
 
+  if (companyName === "X1 Race LLP") {
+    return (
+      <div className="card-logo-container" style={{ borderColor: '#E0E0E0', backgroundColor: '#111111', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '3px' }}>
+        <svg width="38" height="38" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Stylized Red X and White 1 racing logo */}
+          <path d="M20 20 L45 50 L20 80 H35 L52 59 L70 80 H85 L60 50 L85 20 H70 L52 41 L35 20 H20 Z" fill="#E60000" />
+          <rect x="47" y="30" width="10" height="40" fill="#FFFFFF" transform="rotate(15 52 50)" />
+          <text x="50" y="85" fontFamily="'Inter', 'Arial Black', sans-serif" fontSize="10" fontWeight="900" fill="#E60000" textAnchor="middle" letterSpacing="0.5">RACING</text>
+        </svg>
+      </div>
+    );
+  }
+
   if (logoName && !imageError) {
     return (
       <div className="card-logo-container">
@@ -113,6 +126,8 @@ const InternshipCard = memo(({ internship }) => {
     part_time,
     description,
     skills,
+    start_date,
+    application_deadline,
   } = internship;
 
   const displayLocation = work_from_home
@@ -125,48 +140,91 @@ const InternshipCard = memo(({ internship }) => {
 
   return (
     <div className="internship-card">
-      <div className="card-header">
+      {/* Header section with Title, Company and Logo */}
+      <div className="card-header" style={{ marginBottom: '8px' }}>
         <div className="card-title-group">
-          <h3 className="card-job-title">{title || 'Untitled Internship'}</h3>
-          <div className="card-company-row">
-            <span className="card-company-name">{company_name || 'Confidential'}</span>
-            <span className="card-badge-active">Actively hiring</span>
+          <h3 className="card-job-title" style={{ fontSize: '15.5px', fontWeight: '600', color: '#212529', marginBottom: '4px' }}>
+            {title || 'Untitled Internship'}
+          </h3>
+          <div className="card-company-row" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            <span className="card-company-name" style={{ fontSize: '13.5px', color: '#666666', fontWeight: '500' }}>
+              {company_name || 'Confidential'}
+            </span>
+            <span className="card-badge-active" style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '10.5px', padding: '1.5px 6px', borderRadius: '4px', backgroundColor: '#F0F8FF', border: '1px solid #D6E8F7', color: '#008BDC', fontWeight: '500' }}>
+              <svg style={{ width: '10px', height: '10px', fill: 'none', stroke: '#008BDC', strokeWidth: '2.5' }} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+              Actively hiring
+            </span>
           </div>
         </div>
 
-        {/* Circular Company Logo / Fallback */}
+        {/* Company Logo Rounded Square Fallback */}
         <CompanyLogo logoName={internship.company_logo} companyName={company_name} />
       </div>
 
-      {/* Meta details: Home icon, Money icon, Calendar icon */}
-      <div className="card-details-row">
-        <div className="card-detail-item">
-          <FiHome />
-          <span>{displayLocation}</span>
-        </div>
-        <div className="card-detail-item">
-          <FiPlay style={{ transform: 'rotate(90deg)' }} />
-          <span>{stipendText}</span>
-        </div>
-        <div className="card-detail-item">
-          <FiCalendar />
-          <span>{duration || '1 Month'}</span>
-        </div>
+      {/* Location row */}
+      <div className="card-location-row" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13.5px', color: '#666666', marginBottom: '14px' }}>
+        <FiHome style={{ color: '#888888', fontSize: '14px', flexShrink: 0 }} />
+        <span>{displayLocation}</span>
       </div>
 
-      {/* Responsibilities line with Clipboard/Document icon */}
+      {/* Grid columns row */}
+      <div className="card-grid-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '16px', borderBottom: '1px solid #f1f3f5', paddingBottom: '16px', marginBottom: '16px' }}>
+        {/* Column 1: START DATE */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <span style={{ fontSize: '11px', fontWeight: '500', color: '#888888', letterSpacing: '0.3px' }}>START DATE</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13.5px', color: '#333333' }}>
+            <FiPlay style={{ color: '#888888', fontSize: '13px', transform: 'rotate(90deg)' }} />
+            <span>{start_date || 'Starts Immediately'}</span>
+          </div>
+        </div>
+
+        {/* Column 2: DURATION */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <span style={{ fontSize: '11px', fontWeight: '500', color: '#888888', letterSpacing: '0.3px' }}>DURATION</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13.5px', color: '#333333' }}>
+            <FiCalendar style={{ color: '#888888', fontSize: '13px' }} />
+            <span>{duration || '1 Month'}</span>
+          </div>
+        </div>
+
+        {/* Column 3: STIPEND */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <span style={{ fontSize: '11px', fontWeight: '500', color: '#888888', letterSpacing: '0.3px' }}>STIPEND</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13.5px', color: '#333333' }}>
+            <svg style={{ width: '13px', height: '13px', fill: 'none', stroke: '#888888', strokeWidth: '2' }} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>{stipendText}</span>
+          </div>
+        </div>
+
+        {/* Column 4: APPLY BY */}
+        {application_deadline && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <span style={{ fontSize: '11px', fontWeight: '500', color: '#888888', letterSpacing: '0.3px' }}>APPLY BY</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13.5px', color: '#333333' }}>
+              <FiCalendar style={{ color: '#888888', fontSize: '13px' }} />
+              <span>{application_deadline}</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Description / Responsibilities line */}
       {description && (
-        <div className="card-description-row">
-          <FiFileText />
-          <span>{description}</span>
+        <div className="card-description-row" style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', fontSize: '13px', color: '#666666', marginBottom: '12px', lineHeight: '1.4' }}>
+          <FiFileText style={{ color: '#888888', fontSize: '14px', flexShrink: 0, marginTop: '2px' }} />
+          <span style={{ display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{description}</span>
         </div>
       )}
 
       {/* Skills tags list */}
       {skills && skills.length > 0 && (
-        <div className="card-skills-row">
+        <div className="card-skills-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '16px' }}>
           {skills.map((skill, index) => (
-            <span key={index} className="card-skill-tag">
+            <span key={index} className="card-skill-tag" style={{ fontSize: '12px', padding: '2px 8px', borderRadius: '4px', backgroundColor: '#F1F3F5', color: '#495057' }}>
               {skill}
             </span>
           ))}
@@ -174,21 +232,33 @@ const InternshipCard = memo(({ internship }) => {
       )}
 
       {/* Footer tags line */}
-      <div className="card-footer">
-        <div className="card-footer-badge green">
-          <FiClock />
-          <span>{posted_by_label || 'Few hours ago'}</span>
-        </div>
+      <div className="card-footer" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px', borderTop: 'none', paddingTop: 0 }}>
+        {posted_by_label && (
+          <div className="card-footer-badge green" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', padding: '3px 8px', borderRadius: '4px', backgroundColor: '#EBF6EC', color: '#2E7D32', border: '1px solid #D4ECD5', fontWeight: '500' }}>
+            <FiClock />
+            <span>{posted_by_label}</span>
+          </div>
+        )}
+
+        {/* If the card is an early applicant target */}
+        {internship.id === 102 && (
+          <div className="card-footer-badge yellow" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', padding: '3px 8px', borderRadius: '4px', backgroundColor: '#FFF9E6', color: '#B27B00', border: '1px solid #FFE0B2', fontWeight: '500' }}>
+            <svg style={{ width: '11px', height: '11px', fill: 'none', stroke: '#B27B00', strokeWidth: '2.5' }} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <span>Be an early applicant</span>
+          </div>
+        )}
 
         {is_ppo && (
-          <div className="card-footer-badge orange">
+          <div className="card-footer-badge orange" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', padding: '3px 8px', borderRadius: '4px', backgroundColor: '#FDF2E9', color: '#D35400', border: '1px solid #FADBD8', fontWeight: '500' }}>
             <FiCheckCircle />
             <span>{ppo_label_value || 'Job offer post internship'}</span>
           </div>
         )}
 
         {part_time && (
-          <span className="card-footer-text" style={{ marginLeft: '4px' }}>
+          <span className="card-footer-text" style={{ fontSize: '11.5px', color: '#888888', fontWeight: '500', marginLeft: '4px' }}>
             • Part time
           </span>
         )}
