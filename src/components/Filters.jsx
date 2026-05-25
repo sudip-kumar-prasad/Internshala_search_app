@@ -48,7 +48,12 @@ const Filters = () => {
             <input
               type="checkbox"
               checked={preferences}
-              onChange={(e) => setPreferences(e.target.checked)}
+              onChange={(e) => {
+                setPreferences(e.target.checked);
+                if (e.target.checked) {
+                  setSearchQuery('');
+                }
+              }}
             />
             <span>
               As per my <a href="#preferences" onClick={(e) => e.preventDefault()}>preferences</a>
@@ -161,7 +166,7 @@ const Filters = () => {
       </div>
 
       {/* Separate Keyword Search Card */}
-      <div className="keyword-search-card">
+      <div className={`keyword-search-card ${preferences ? 'disabled' : ''}`}>
         <div className="keyword-card-title">Keyword Search</div>
         <div className="keyword-row">
           <input
@@ -171,6 +176,7 @@ const Filters = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="e.g. Design, Mumbai, Infosys"
             style={{ flex: 1 }}
+            disabled={preferences}
           />
           {searchQuery ? (
             <button
@@ -179,11 +185,18 @@ const Filters = () => {
               onClick={() => setSearchQuery('')}
               style={{ backgroundColor: '#f44336' }}
               title="Clear Search"
+              disabled={preferences}
             >
               <FiX />
             </button>
           ) : (
-            <button type="button" className="keyword-btn-search" title="Search">
+            <button
+              type="button"
+              className="keyword-btn-search"
+              title="Search"
+              disabled={preferences}
+              style={preferences ? { backgroundColor: '#F5F5F5', color: '#9E9E9E', cursor: 'not-allowed', border: '1px solid #dee2e6' } : {}}
+            >
               <FiSearch />
             </button>
           )}

@@ -395,6 +395,18 @@ input, select {
   margin-top: 16px;
 }
 
+.keyword-search-card.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.keyword-search-card.disabled .filter-input {
+  background-color: #f9f9f9;
+  border-color: #e2e5e8;
+  color: #b0b0b0;
+  cursor: not-allowed;
+}
+
 .keyword-card-title {
   font-size: 13px;
   font-weight: 500;
