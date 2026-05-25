@@ -218,7 +218,7 @@ input, select {
 }
 
 .filters-sidebar {
-  width: 272px;
+  width: 300px; /* Expanded width matching original */
   flex-shrink: 0;
   position: sticky;
   top: 84px; /* Keep it perfectly below the 68px sticky header */
