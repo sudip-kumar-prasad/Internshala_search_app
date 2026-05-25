@@ -228,7 +228,7 @@ input, select {
 .filters-card {
   background-color: #ffffff;
   border: 1px solid #dee2e6;
-  border-radius: 8px;
+  border-radius: 16px; /* Soft round corners matching original */
   padding: 24px; /* Spacious padding matching original */
   position: relative;
 }
@@ -428,7 +428,7 @@ input, select {
 .keyword-search-card {
   background-color: #ffffff;
   border: 1px solid #dee2e6;
-  border-radius: 8px;
+  border-radius: 16px; /* Soft round corners matching original */
   padding: 24px; /* Increased from 20px */
   margin-top: 24px; /* Increased from 16px */
 }
@@ -486,7 +486,7 @@ input, select {
 .promo-card {
   background-color: #ffffff;
   border: 1px solid #dee2e6;
-  border-radius: 8px;
+  border-radius: 16px; /* Soft round corners matching original */
   padding: 20px;
   margin-bottom: 16px;
   position: relative;
@@ -598,7 +598,7 @@ input, select {
 .internship-card {
   background-color: #ffffff;
   border: 1px solid #dee2e6;
-  border-radius: 8px;
+  border-radius: 16px; /* Soft round corners matching original */
   padding: 20px;
   margin-bottom: 16px;
   position: relative;
