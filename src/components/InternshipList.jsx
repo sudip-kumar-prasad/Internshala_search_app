@@ -200,7 +200,7 @@ const InternshipCard = memo(({ internship }) => {
 // Promoted course card matching the screenshot layout
 const PromoCard = () => {
   return (
-    <div className="promo-card" style={{ border: '1px solid #dee2e6', borderRadius: '8px', padding: '20px', backgroundColor: '#ffffff', marginBottom: '16px', position: 'relative' }}>
+    <div className="promo-card">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
         <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#212529', margin: 0 }}>
           Get hired for Web Development <span style={{ color: '#888888', fontWeight: '400', fontSize: '13px', marginLeft: '4px' }}>• Promoted</span>
