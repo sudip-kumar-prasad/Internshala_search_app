@@ -69,8 +69,13 @@ const OfficialLogo = () => (
 // Premium Skeleton card for loading screen
 const SkeletonCard = () => (
   <div className="skeleton-card">
-    <div className="skeleton-line" style={{ height: '18px', width: '40%', marginBottom: '12px' }} />
-    <div className="skeleton-line" style={{ height: '14px', width: '25%', marginBottom: '20px' }} />
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+      <div style={{ flex: 1, marginRight: '16px' }}>
+        <div className="skeleton-line" style={{ height: '18px', width: '60%', marginBottom: '12px' }} />
+        <div className="skeleton-line" style={{ height: '14px', width: '40%', marginBottom: '12px' }} />
+      </div>
+      <div className="skeleton-line" style={{ height: '48px', width: '48px', borderRadius: '6px', flexShrink: 0 }} />
+    </div>
     <div style={{ display: 'flex', gap: '16px', marginBottom: '20px' }}>
       <div className="skeleton-line" style={{ height: '14px', width: '100px' }} />
       <div className="skeleton-line" style={{ height: '14px', width: '100px' }} />
@@ -280,7 +285,15 @@ function App() {
 
               {/* Avatar circle */}
               <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                <div className="avatar-circle">S</div>
+                <div className="avatar-circle" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg
+                    style={{ width: '16px', height: '16px', fill: '#555555' }}
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                  </svg>
+                </div>
                 <CaretIcon />
               </div>
             </nav>

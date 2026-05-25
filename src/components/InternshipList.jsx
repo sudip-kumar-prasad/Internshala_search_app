@@ -11,43 +11,35 @@ import {
 } from 'react-icons/fi';
 import { useFilters } from '../context/FilterContext';
 
-// Authentic Logo component with colorized fallback circle
+// Authentic Logo component with building placeholder fallback
 const CompanyLogo = ({ logoName, companyName }) => {
-  const fallbackLetter = companyName ? companyName.charAt(0).toUpperCase() : 'I';
+  const [imageError, setImageError] = useState(false);
 
-  if (logoName) {
+  if (logoName && !imageError) {
     return (
       <div className="card-logo-container">
         <img
           src={`https://internshala.com/uploads/logo/${logoName}`}
           alt={`${companyName} logo`}
           className="card-logo-img"
-          onError={(e) => {
-            e.target.style.display = 'none';
-          }}
+          onError={() => setImageError(true)}
         />
       </div>
     );
   }
 
-  // Soft palette colors for letter logo avatars
-  const colors = [
-    { bg: '#e2f0d9', border: '#c5e0b4', color: '#385723' },
-    { bg: '#fff3cd', border: '#ffe8a1', color: '#856404' },
-    { bg: '#fce4ec', border: '#f8bbd0', color: '#c2185b' },
-    { bg: '#e8f0fe', border: '#d2e3fc', color: '#1a73e8' },
-  ];
-  const colorIndex = companyName ? companyName.charCodeAt(0) % colors.length : 0;
-  const { bg, border, color } = colors[colorIndex];
-
   return (
     <div
       className="card-logo-container"
-      style={{ backgroundColor: bg, borderColor: border }}
+      style={{ backgroundColor: '#FCFCFC', borderColor: '#E0E0E0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
     >
-      <span className="card-logo-letter" style={{ color }}>
-        {fallbackLetter}
-      </span>
+      <svg
+        style={{ width: '26px', height: '26px', fill: '#9E9E9E' }}
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z" />
+      </svg>
     </div>
   );
 };
