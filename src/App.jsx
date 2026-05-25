@@ -1,12 +1,70 @@
 import React, { useEffect, useState, Suspense, lazy, useMemo } from "react";
 import { FilterProvider, useFilters } from "./context/FilterContext";
 import { fallbackInternships } from "./mockData";
-import { FiChevronDown, FiMessageSquare, FiChevronRight } from 'react-icons/fi';
 import "./index.css";
 
 // Lazy load filter and list components for speed and splitting
 const Filters = lazy(() => import("./components/Filters"));
 const InternshipList = lazy(() => import("./components/InternshipList"));
+
+// Small solid caret down icon matching the official navigation dropdown caret
+const CaretIcon = () => (
+  <svg style={{ width: '8px', height: '6px', fill: '#484848', marginLeft: '6px', marginTop: '1px' }} viewBox="0 0 10 6">
+    <path d="M0,0 L5,6 L10,0 Z" />
+  </svg>
+);
+
+// Message bubble icon matching the screenshot exactly
+const MessageIcon = () => (
+  <svg
+    style={{ width: '22px', height: '22px', fill: 'none', stroke: '#484848', strokeWidth: '1.8', cursor: 'pointer' }}
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+    />
+  </svg>
+);
+
+// Official Internshala Logo with Curved Gray Flight Path and Blue Paper Airplane
+const OfficialLogo = () => (
+  <div
+    style={{
+      fontFamily: "'Inter', sans-serif",
+      fontWeight: '800',
+      fontSize: '18px',
+      display: 'flex',
+      alignItems: 'center',
+      letterSpacing: '0.2px',
+      textTransform: 'uppercase',
+      cursor: 'pointer',
+      userSelect: 'none',
+    }}
+  >
+    <span style={{ color: '#008BDC' }}>INTERN</span>
+    <span style={{ color: '#555555', position: 'relative', marginLeft: '1px' }}>
+      SHALA
+      <svg
+        style={{
+          position: 'absolute',
+          top: '-15px',
+          right: '-24px',
+          width: '26px',
+          height: '18px',
+        }}
+        viewBox="0 0 26 18"
+      >
+        {/* Curved flight trace line */}
+        <path d="M-6,14 C-2,10 4,8 10,11" fill="none" stroke="#bdc3c7" strokeWidth="1" />
+        {/* Solid blue paper plane */}
+        <path d="M6,10 L24,2 L14,16 L12,11 L6,10 Z M12,11 L16,7 L13,10 L12,11 Z" fill="#008BDC" />
+      </svg>
+    </span>
+  </div>
+);
 
 // Premium Skeleton card for loading screen
 const SkeletonCard = () => (
@@ -20,31 +78,6 @@ const SkeletonCard = () => (
     </div>
     <div className="skeleton-line" style={{ height: '14px', width: '90%', marginBottom: '12px' }} />
     <div className="skeleton-line" style={{ height: '24px', width: '120px', borderRadius: '4px', marginTop: '16px' }} />
-  </div>
-);
-
-// Official inline paper plane SVG logo
-const OfficialLogo = () => (
-  <div className="logo" style={{ color: '#003366', cursor: 'pointer' }}>
-    <span>Intern</span>
-    <span style={{ position: 'relative' }}>
-      shala
-      <svg
-        style={{
-          position: 'absolute',
-          top: '-6px',
-          right: '-18px',
-          width: '15px',
-          height: '15px',
-          fill: '#008BDC',
-          transform: 'rotate(10deg)',
-        }}
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-      </svg>
-    </span>
   </div>
 );
 
@@ -225,30 +258,30 @@ function App() {
             <nav className="nav">
               <span className="nav-item active">
                 <span>Internships</span>
-                <FiChevronDown style={{ fontSize: '11px', marginTop: '2px', color: '#888888' }} />
+                <CaretIcon />
               </span>
               <span className="nav-item">
                 <span>Courses</span>
                 <span className="nav-badge-offer">OFFER</span>
-                <FiChevronDown style={{ fontSize: '11px', marginTop: '2px', color: '#888888' }} />
+                <CaretIcon />
               </span>
               <span className="nav-item">
                 <span>Jobs</span>
-                <FiChevronDown style={{ fontSize: '11px', marginTop: '2px', color: '#888888' }} />
+                <CaretIcon />
               </span>
-              <span className="nav-item" style={{ fontWeight: '700' }}>
+              <span className="nav-item" style={{ fontWeight: '600', color: '#484848' }}>
                 IS PRO
               </span>
 
               {/* Chat bubble icon */}
-              <div style={{ display: 'flex', alignItems: 'center', marginLeft: '12px', cursor: 'pointer', color: '#484848' }}>
-                <FiMessageSquare style={{ fontSize: '19px' }} />
+              <div style={{ display: 'flex', alignItems: 'center', marginLeft: '12px' }}>
+                <MessageIcon />
               </div>
 
               {/* Avatar circle */}
               <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                 <div className="avatar-circle">S</div>
-                <FiChevronDown style={{ fontSize: '11px', marginLeft: '4px', color: '#888888' }} />
+                <CaretIcon />
               </div>
             </nav>
           </div>
@@ -264,5 +297,3 @@ function App() {
 }
 
 export default App;
-
-
