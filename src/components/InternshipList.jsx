@@ -112,7 +112,7 @@ const CompanyLogo = ({ logoName, companyName }) => {
 };
 
 // Premium Internship Card matching Internshala's exact screenshot layout
-const InternshipCard = memo(({ internship }) => {
+const InternshipCard = memo(({ internship, totalCount }) => {
   const {
     title,
     company_name,
@@ -139,7 +139,10 @@ const InternshipCard = memo(({ internship }) => {
   const stipendText = stipend ? stipend.salary : 'Unpaid';
 
   return (
-    <div className="internship-card">
+    <div className="internship-card" style={{ position: 'relative' }}>
+      {/* Total internships badge */}
+
+
       {/* Header section with Title, Company and Logo */}
       <div className="card-header" style={{ marginBottom: '8px' }}>
         <div className="card-title-group">
@@ -268,9 +271,22 @@ const InternshipCard = memo(({ internship }) => {
 });
 
 // Promoted course card matching the screenshot layout
-const PromoCard = () => {
+const PromoCard = ({ totalCount }) => {
   return (
     <div className="promo-card">
+      <div className="promo-total-count" style={{
+        position: 'absolute',
+        top: '8px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        background: 'rgba(255,255,255,0.85)',
+        padding: '2px 6px',
+        borderRadius: '4px',
+        fontSize: '12px',
+        fontWeight: '500',
+        color: '#212529',
+        zIndex: 1,
+      }}>{totalCount} Internships</div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
         <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#212529', margin: 0 }}>
           Get hired for Web Development <span style={{ color: '#888888', fontWeight: '400', fontSize: '13px', marginLeft: '4px' }}>• Promoted</span>
@@ -308,6 +324,7 @@ const PromoCard = () => {
 
 const InternshipList = ({ internships }) => {
   const { clearAllFilters } = useFilters();
+  const totalCount = internships.length;
 
   if (!internships || internships.length === 0) {
     return (
@@ -330,12 +347,12 @@ const InternshipList = ({ internships }) => {
         if (index === 0) {
           return (
             <React.Fragment key="promo-wrapper-key">
-              <PromoCard />
-              <InternshipCard internship={internship} />
+              <PromoCard totalCount={totalCount} />
+              <InternshipCard internship={internship} totalCount={totalCount} />
             </React.Fragment>
           );
         }
-        return <InternshipCard key={internship.id} internship={internship} />;
+        return <InternshipCard key={internship.id} internship={internship} totalCount={totalCount} />;
       })}
     </div>
   );
