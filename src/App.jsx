@@ -1,6 +1,5 @@
 import React, { useEffect, useState, Suspense, lazy, useMemo } from "react";
 import { FilterProvider, useFilters } from "./context/FilterContext";
-import { fallbackInternships } from "./mockData";
 import "./index.css";
 
 // Lazy load filter and list components for speed and splitting
@@ -87,6 +86,7 @@ const SkeletonCard = () => (
 function SearchDashboard() {
   const [internships, setInternships] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const {
     profile,
@@ -102,60 +102,60 @@ function SearchDashboard() {
     fastResponse,
     earlyApplicant,
     forWomen,
+    // New states from FilterContext
+    sortBy,
+    favorites,
+    showSavedOnly,
+    isMobileFiltersOpen,
+    setIsMobileFiltersOpen,
   } = useFilters();
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      setError(false);
+      // Attempt to fetch from local proxied endpoint first to bypass CORS, fall back to direct if needed
+      let response;
+      try {
+        response = await fetch("/api/hiring/search");
+        if (!response.ok) {
+          throw new Error("Local proxy call failed");
+        }
+      } catch (err) {
+        console.warn("Proxy fetch failed, trying direct endpoint...", err);
+        response = await fetch("https://internshala.com/hiring/search");
+      }
+
+      if (!response.ok) {
+        throw new Error("Both proxy and direct fetch failed");
+      }
+      
+      const data = await response.json();
+      
+      // Parse custom Internshala response format: keys to array mapper
+      const ids = data.internship_ids || [];
+      const items = ids.map(id => data.internships_meta[id]).filter(Boolean);
+      
+      if (items.length > 0) {
+        setInternships(items);
+      } else {
+        setInternships([]);
+      }
+    } catch (error) {
+      console.warn("Failed to fetch from live endpoint.", error);
+      setError(true);
+      setInternships([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Fetch data on mount
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        // Attempt to fetch from local proxied endpoint first to bypass CORS, fall back to direct if needed
-        let response;
-        try {
-          response = await fetch("/api/hiring/search");
-          if (!response.ok) {
-            throw new Error("Local proxy call failed");
-          }
-        } catch (err) {
-          console.warn("Proxy fetch failed, trying direct endpoint...", err);
-          response = await fetch("https://internshala.com/hiring/search");
-        }
-
-        if (!response.ok) {
-          throw new Error("Both proxy and direct fetch failed");
-        }
-        
-        const data = await response.json();
-        
-        // Parse custom Internshala response format: keys to array mapper
-        const ids = data.internship_ids || [];
-        const items = ids.map(id => data.internships_meta[id]).filter(Boolean);
-        
-        if (items.length > 0) {
-          // Put the live fetched data at the very top, followed by mock data as fallback/additional items
-          const merged = [...items, ...fallbackInternships];
-          // Remove duplicate IDs if any (keeping the first occurrence, which will be the live ones)
-          const seen = new Set();
-          const unique = merged.filter(item => {
-            if (seen.has(item.id)) return false;
-            seen.add(item.id);
-            return true;
-          });
-          setInternships(unique);
-        } else {
-          setInternships(fallbackInternships);
-        }
-      } catch (error) {
-        console.warn("Failed to fetch from live endpoint, loading mock fallback data.", error);
-        setInternships(fallbackInternships);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
   }, []);
 
-  // Comprehensive client-side filtering logic
+  // Comprehensive client-side filtering and sorting logic
   const filteredInternships = useMemo(() => {
     const getDurationInMonths = (durStr) => {
       if (!durStr) return 0;
@@ -166,7 +166,12 @@ function SearchDashboard() {
       return 0;
     };
 
-    return internships.filter((item) => {
+    let result = internships.filter((item) => {
+      // 0. Favorites-only view filter
+      if (showSavedOnly && !favorites.has(item.id)) {
+        return false;
+      }
+
       // If preferences is active, we ignore profile/location/wfh/part-time inputs as they are disabled in UI
       if (!preferences) {
         // 1. Profile Filter
@@ -196,7 +201,7 @@ function SearchDashboard() {
           return false;
         }
       } else {
-        // When preferences is enabled, we only display internships matching user's preferred roles: SDE, Web, Front End, AI, Data Science, Android
+        // When preferences is enabled, we only display internships matching user's preferred roles
         const preferredKeywords = ["web", "software", "front end", "ai", "artificial intelligence", "data science", "android", "developer", "development"];
         const title = item.title ? item.title.toLowerCase() : "";
         const profileName = item.profile_name ? item.profile_name.toLowerCase() : "";
@@ -206,7 +211,7 @@ function SearchDashboard() {
         if (!matchesPreferred) return false;
       }
 
-      // 5. Stipend Filter (minimum stipend amount) - active even in preferences mode
+      // 5. Stipend Filter (minimum stipend amount)
       if (stipend > 0) {
         const salaryVal = item.stipend ? item.stipend.salaryValue1 : 0;
         if (salaryVal < stipend) return false;
@@ -238,7 +243,7 @@ function SearchDashboard() {
         }
       }
 
-      // 10. General Keyword Search (Query matching multiple fields) - active even in preferences mode
+      // 10. General Keyword Search
       if (searchQuery) {
         const sQuery = searchQuery.toLowerCase();
         const titleMatches = item.title ? item.title.toLowerCase().includes(sQuery) : false;
@@ -252,28 +257,81 @@ function SearchDashboard() {
 
       return true;
     });
-  }, [internships, profile, location, wfh, partTime, stipend, searchQuery, preferences, startDate, maxDuration, jobOffer, fastResponse, earlyApplicant, forWomen]);
+
+    // Client-side sorting logic
+    if (sortBy === 'newest') {
+      result.sort((a, b) => {
+        const timeA = a.postedOnDateTime || 0;
+        const timeB = b.postedOnDateTime || 0;
+        if (timeB !== timeA) return timeB - timeA;
+        return b.id - a.id;
+      });
+    } else if (sortBy === 'stipend') {
+      result.sort((a, b) => {
+        const salA = a.stipend?.salaryValue1 || 0;
+        const salB = b.stipend?.salaryValue1 || 0;
+        return salB - salA;
+      });
+    } else if (sortBy === 'popularity') {
+      const getApplicantsCount = (item) => {
+        const text = item.application_status_message?.message || '';
+        const match = text.match(/(\d+)/);
+        return match ? parseInt(match[1]) : 0;
+      };
+      result.sort((a, b) => {
+        return getApplicantsCount(b) - getApplicantsCount(a);
+      });
+    }
+
+    return result;
+  }, [internships, profile, location, wfh, partTime, stipend, searchQuery, preferences, startDate, maxDuration, jobOffer, fastResponse, earlyApplicant, forWomen, showSavedOnly, favorites, sortBy]);
 
   return (
     <div className="page-wrapper">
+      {/* Mobile Floating Filter Drawer trigger FAB */}
+      <button
+        className="mobile-filters-trigger-fab"
+        onClick={() => setIsMobileFiltersOpen(true)}
+        aria-label="Open Filters Menu"
+        role="button"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '6px' }}>
+          <path d="M3 4H21V6.5L14 13.5V19.5L10 21.5V13.5L3 6.5V4Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        </svg>
+        <span>Filters</span>
+      </button>
+
+      {/* Backdrop overlay for mobile drawer */}
+      {isMobileFiltersOpen && (
+        <div
+          className="filters-backdrop-overlay"
+          onClick={() => setIsMobileFiltersOpen(false)}
+          role="presentation"
+          aria-hidden="true"
+        />
+      )}
 
       {/* Sidebar + Result Area Layout */}
       <div className="content-layout">
-        {/* Filters Sidebar */}
-        <Suspense fallback={
-          <div className="filters-sidebar">
-            <div className="filters-card" style={{ height: '380px' }}>Loading filters...</div>
-          </div>
-        }>
-          <Filters />
-        </Suspense>
+        {/* Filters Sidebar (receives drawer state class via CSS selector) */}
+        <div className={`filters-sidebar-container ${isMobileFiltersOpen ? 'drawer-open' : ''}`}>
+          <Suspense fallback={
+            <div className="filters-sidebar">
+              <div className="filters-card" style={{ height: '380px' }}>Loading filters...</div>
+            </div>
+          }>
+            <Filters />
+          </Suspense>
+        </div>
 
         {/* Listings Result List */}
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
           {/* Centered Total Internships Heading */}
           <div className="total-count-heading">
-            <h1>{loading ? "..." : `${filteredInternships.length} Total Internships`}</h1>
-            <p>Latest Summer Internships</p>
+            <h1>
+              {loading ? "Loading..." : `${filteredInternships.length} ${showSavedOnly ? 'Saved' : 'Total'} Internships`}
+            </h1>
+            <p>{showSavedOnly ? "Your Bookmarked Opportunities" : "Latest Summer Internships"}</p>
           </div>
 
           {loading ? (
@@ -281,6 +339,14 @@ function SearchDashboard() {
               <SkeletonCard />
               <SkeletonCard />
               <SkeletonCard />
+            </div>
+          ) : error ? (
+            <div className="empty-state" style={{ padding: '40px 20px' }}>
+              <h3>Failed to load internships</h3>
+              <p>Please check your network connection or try again.</p>
+              <button type="button" className="empty-state-btn" onClick={fetchData}>
+                Retry Fetch
+              </button>
             </div>
           ) : (
             <Suspense fallback={

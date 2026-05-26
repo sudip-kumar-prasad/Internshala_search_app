@@ -953,3 +953,148 @@ input, select {
   color: #008BDC;
   font-weight: 600;
 }
+
+/* Custom Added Styles for Advanced Features */
+
+/* 1. Bookmark Heart button animations and states */
+.card-bookmark-btn:hover {
+  transform: scale(1.15) !important;
+  background-color: rgba(255, 77, 79, 0.08) !important;
+}
+.card-bookmark-btn:active {
+  transform: scale(0.95) !important;
+}
+
+@keyframes heart-pop {
+  0% { transform: scale(0.5); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+/* 2. Tabs Switcher styling */
+.tab-btn {
+  background-color: transparent;
+  color: #666666;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.tab-btn:hover {
+  color: #333333;
+}
+.tab-btn.active {
+  background-color: #008BDC !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(0, 139, 220, 0.25);
+}
+
+/* 3. Sort Select dropdown styling */
+.sort-select {
+  transition: all 0.2s;
+}
+.sort-select:focus {
+  border-color: #008BDC !important;
+  box-shadow: 0 0 0 3px rgba(0, 139, 220, 0.15);
+}
+
+/* 4. Shimmering dots loader */
+@keyframes dot-pulsate {
+  0%, 80%, 100% {
+    transform: scale(0.4);
+    opacity: 0.4;
+  }
+  40% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+/* 5. Mobile Drawer Responsive Layout */
+.mobile-filters-trigger-fab {
+  display: none;
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #008BDC;
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 14.5px;
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgba(0, 139, 220, 0.4);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+}
+
+.mobile-filters-trigger-fab:hover {
+  background-color: #007bc2;
+  box-shadow: 0 8px 24px rgba(0, 139, 220, 0.5);
+  transform: translateX(-50%) translateY(-2px);
+}
+
+.mobile-filters-trigger-fab:active {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Backdrop */
+.filters-backdrop-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 1900;
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Responsive Overrides (max-width: 900px) */
+@media (max-width: 900px) {
+  .mobile-filters-trigger-fab {
+    display: flex;
+  }
+
+  .filters-sidebar-container {
+    position: fixed;
+    top: 0;
+    left: -320px; /* Start hidden on the left */
+    width: 310px;
+    height: 100vh;
+    background-color: #ffffff;
+    z-index: 2000;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
+    overflow: hidden;
+  }
+
+  .filters-sidebar-container.drawer-open {
+    left: 0; /* Slide in! */
+  }
+
+  .filters-sidebar {
+    width: 100% !important;
+    height: 100%;
+    max-height: 100vh !important;
+    position: relative !important;
+    top: 0 !important;
+    margin-top: 0 !important;
+    padding: 20px !important;
+    overflow-y: auto !important;
+  }
+
+  .filters-close-btn-mobile {
+    display: flex !important;
+  }
+}

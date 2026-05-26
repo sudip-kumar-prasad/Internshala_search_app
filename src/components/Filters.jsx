@@ -93,6 +93,8 @@ const Filters = () => {
     forWomen,
     setForWomen,
     clearAllFilters,
+    // Mobile controls
+    setIsMobileFiltersOpen,
   } = useFilters();
 
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -132,10 +134,21 @@ const Filters = () => {
     <div className="filters-sidebar">
       {/* Primary Filters Card */}
       <div className="filters-card">
-        {/* Header Title with Blue Funnel Icon */}
-        <div className="filters-header" style={{ justifyContent: 'center', display: 'flex', alignItems: 'center', marginBottom: '18px' }}>
-          <CustomFilterIcon />
-          <span style={{ fontSize: '15px', fontWeight: '700', color: '#212529' }}>Filters</span>
+        {/* Header Title with Blue Funnel Icon & Mobile Close button */}
+        <div className="filters-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px', width: '100%' }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <CustomFilterIcon />
+            <span style={{ fontSize: '15px', fontWeight: '700', color: '#212529' }}>Filters</span>
+          </div>
+          <button
+            type="button"
+            className="filters-close-btn-mobile"
+            onClick={() => setIsMobileFiltersOpen(false)}
+            aria-label="Close Filters"
+            style={{ display: 'none', alignItems: 'center', justifyContent: 'center', fontSize: '20px', color: '#666', cursor: 'pointer' }}
+          >
+            <FiX />
+          </button>
         </div>
 
         {/* Checkbox: As per my preferences */}

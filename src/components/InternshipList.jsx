@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo, useState, useEffect, useRef } from 'react';
 import {
   FiHome,
   FiPlay,
@@ -8,8 +8,21 @@ import {
   FiZap,
   FiChevronRight,
   FiCheckCircle,
+  FiHeart,
 } from 'react-icons/fi';
 import { useFilters } from '../context/FilterContext';
+
+const HeartOutlineIcon = () => (
+  <svg style={{ width: '19px', height: '19px', stroke: '#888888', strokeWidth: '2', fill: 'none', transition: 'stroke 0.2s' }} viewBox="0 0 24 24">
+    <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+  </svg>
+);
+
+const HeartSolidIcon = () => (
+  <svg style={{ width: '19px', height: '19px', fill: '#ff4d4f', stroke: '#ff4d4f', strokeWidth: '2', animation: 'heart-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }} viewBox="0 0 24 24">
+    <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+  </svg>
+);
 
 // Authentic Logo component with custom branding and building fallback
 const CompanyLogo = ({ logoName, companyName }) => {
@@ -113,7 +126,10 @@ const CompanyLogo = ({ logoName, companyName }) => {
 
 // Premium Internship Card matching Internshala's exact screenshot layout
 const InternshipCard = memo(({ internship, totalCount }) => {
+  const { favorites, toggleFavorite } = useFilters();
+
   const {
+    id,
     title,
     company_name,
     work_from_home,
@@ -130,6 +146,8 @@ const InternshipCard = memo(({ internship, totalCount }) => {
     application_deadline,
   } = internship;
 
+  const isFavorited = favorites.has(id);
+
   const displayLocation = work_from_home
     ? 'Work from home'
     : location_names && location_names.length > 0
@@ -140,8 +158,41 @@ const InternshipCard = memo(({ internship, totalCount }) => {
 
   return (
     <div className="internship-card" style={{ position: 'relative' }}>
-      {/* Total internships badge */}
-
+      {/* Heart Bookmark Button */}
+      <button
+        type="button"
+        className="card-bookmark-btn"
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleFavorite(id);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleFavorite(id);
+          }
+        }}
+        aria-label={isFavorited ? "Remove from bookmarks" : "Bookmark internship"}
+        role="button"
+        tabIndex="0"
+        style={{
+          position: 'absolute',
+          top: '20px',
+          right: '80px',
+          zIndex: 10,
+          background: 'none',
+          border: 'none',
+          padding: '6px',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: '50%',
+          transition: 'all 0.2s ease',
+        }}
+      >
+        {isFavorited ? <HeartSolidIcon /> : <HeartOutlineIcon />}
+      </button>
 
       {/* Header section with Title, Company and Logo */}
       <div className="card-header" style={{ marginBottom: '8px' }}>
@@ -310,18 +361,93 @@ const PromoCard = ({ totalCount }) => {
 };
 
 const InternshipList = ({ internships }) => {
-  const { clearAllFilters } = useFilters();
+  const {
+    clearAllFilters,
+    sortBy,
+    setSortBy,
+    showSavedOnly,
+    setShowSavedOnly,
+    favorites,
+    page,
+    setPage,
+    pageSize,
+    loadMore,
+  } = useFilters();
+
   const totalCount = internships.length;
+  const visibleInternships = internships.slice(0, page * pageSize);
+
+  const sentinelRef = useRef(null);
+
+  useEffect(() => {
+    if (!sentinelRef.current) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && visibleInternships.length < internships.length) {
+          // Add a small 400ms delay for a premium loading micro-animation
+          setTimeout(() => {
+            loadMore();
+          }, 450);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(sentinelRef.current);
+    return () => observer.disconnect();
+  }, [sentinelRef, visibleInternships.length, internships.length, loadMore]);
+
+  // Reset page to 1 when active internships array updates or filters clear
+  useEffect(() => {
+    setPage(1);
+  }, [internships, setPage]);
 
   if (!internships || internships.length === 0) {
     return (
       <div className="listings-container">
+        {/* Pill Tabs & Sort Controls even when empty to allow switching back */}
+        <div className="list-controls-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
+          <div className="tabs-container" style={{ display: 'flex', gap: '8px', padding: '4px', backgroundColor: '#f1f3f5', borderRadius: '8px' }}>
+            <button
+              type="button"
+              className={`tab-btn ${!showSavedOnly ? 'active' : ''}`}
+              onClick={() => setShowSavedOnly(false)}
+              aria-label="Show all opportunities"
+              role="tab"
+              aria-selected={!showSavedOnly}
+              style={{ padding: '6px 14px', fontSize: '13px', fontWeight: '600', borderRadius: '6px', cursor: 'pointer', transition: 'all 0.2s', border: 'none' }}
+            >
+              All Opportunities
+            </button>
+            <button
+              type="button"
+              className={`tab-btn ${showSavedOnly ? 'active' : ''}`}
+              onClick={() => setShowSavedOnly(true)}
+              aria-label="Show bookmarked opportunities"
+              role="tab"
+              aria-selected={showSavedOnly}
+              style={{ padding: '6px 14px', fontSize: '13px', fontWeight: '600', borderRadius: '6px', cursor: 'pointer', transition: 'all 0.2s', border: 'none' }}
+            >
+              Bookmarked ({totalCount})
+            </button>
+          </div>
+        </div>
+
         <div className="empty-state">
           <h3>No internships found</h3>
-          <p>Try adjusting your profile keyword, location, or monthly stipend slider.</p>
-          <button type="button" className="empty-state-btn" onClick={clearAllFilters}>
-            Clear all filters
-          </button>
+          <p>
+            {showSavedOnly
+              ? "You haven't bookmarked any opportunities yet."
+              : "Try adjusting your profile keyword, location, or monthly stipend slider."}
+          </p>
+          {!showSavedOnly ? (
+            <button type="button" className="empty-state-btn" onClick={clearAllFilters}>
+              Clear all filters
+            </button>
+          ) : (
+            <button type="button" className="empty-state-btn" onClick={() => setShowSavedOnly(false)}>
+              Show All Opportunities
+            </button>
+          )}
         </div>
       </div>
     );
@@ -329,9 +455,60 @@ const InternshipList = ({ internships }) => {
 
   return (
     <div className="listings-container">
-      {internships.map((internship, index) => {
+      {/* Pill Tabs & Sort Controls */}
+      <div className="list-controls-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
+        <div className="tabs-container" style={{ display: 'flex', gap: '8px', padding: '4px', backgroundColor: '#f1f3f5', borderRadius: '8px' }}>
+          <button
+            type="button"
+            className={`tab-btn ${!showSavedOnly ? 'active' : ''}`}
+            onClick={() => setShowSavedOnly(false)}
+            aria-label="Show all opportunities"
+            role="tab"
+            aria-selected={!showSavedOnly}
+            style={{ padding: '6px 14px', fontSize: '13px', fontWeight: '600', borderRadius: '6px', cursor: 'pointer', transition: 'all 0.2s', border: 'none' }}
+          >
+            All Opportunities
+          </button>
+          <button
+            type="button"
+            className={`tab-btn ${showSavedOnly ? 'active' : ''}`}
+            onClick={() => setShowSavedOnly(true)}
+            aria-label="Show bookmarked opportunities"
+            role="tab"
+            aria-selected={showSavedOnly}
+            style={{ padding: '6px 14px', fontSize: '13px', fontWeight: '600', borderRadius: '6px', cursor: 'pointer', transition: 'all 0.2s', border: 'none' }}
+          >
+            Bookmarked ({favorites.size})
+          </button>
+        </div>
+
+        <div className="sort-container" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <label htmlFor="sortBySelect" className="sort-label" style={{ fontSize: '13px', fontWeight: '600', color: '#666' }}>Sort by</label>
+          <div className="sort-select-wrapper" style={{ position: 'relative' }}>
+            <select
+              id="sortBySelect"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="sort-select"
+              style={{ padding: '6px 28px 6px 12px', fontSize: '13px', fontWeight: '600', border: '1px solid #dee2e6', borderRadius: '6px', color: '#484848', appearance: 'none', backgroundColor: '#fff', cursor: 'pointer', outline: 'none' }}
+            >
+              <option value="newest">Newest First</option>
+              <option value="popularity">Popularity</option>
+              <option value="stipend">Stipend (Highest)</option>
+            </select>
+            <div style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', display: 'flex', alignItems: 'center' }}>
+              <svg width="8" height="6" fill="#484848" viewBox="0 0 10 6">
+                <path d="M0,0 L5,6 L10,0 Z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {visibleInternships.map((internship, index) => {
         // Embed the ticking training promo card after the first card to match screenshot perfectly!
-        if (index === 0) {
+        // Only show the promo card if we are NOT in showSavedOnly mode
+        if (index === 0 && !showSavedOnly) {
           return (
             <React.Fragment key="promo-wrapper-key">
               <PromoCard totalCount={totalCount} />
@@ -341,6 +518,18 @@ const InternshipList = ({ internships }) => {
         }
         return <InternshipCard key={internship.id} internship={internship} totalCount={totalCount} />;
       })}
+
+      {/* Infinite Scroll Sentinel element */}
+      {visibleInternships.length < internships.length && (
+        <div ref={sentinelRef} className="infinite-scroll-loading" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px 0', gap: '8px' }}>
+          <div className="shimmering-dots-loader" style={{ display: 'flex', gap: '6px' }}>
+            <span className="dot" style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#008BDC', display: 'inline-block', animation: 'dot-pulsate 1.2s infinite ease-in-out both' }}></span>
+            <span className="dot" style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#008BDC', display: 'inline-block', animation: 'dot-pulsate 1.2s infinite ease-in-out both', animationDelay: '0.2s' }}></span>
+            <span className="dot" style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#008BDC', display: 'inline-block', animation: 'dot-pulsate 1.2s infinite ease-in-out both', animationDelay: '0.4s' }}></span>
+          </div>
+          <span style={{ fontSize: '12.5px', color: '#888', fontWeight: '500' }}>Loading more internships...</span>
+        </div>
+      )}
     </div>
   );
 };

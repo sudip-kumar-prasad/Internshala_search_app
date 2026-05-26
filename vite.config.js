@@ -10,6 +10,9 @@ export default defineConfig({
         target: 'https://internshala.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
+        headers: {
+          'Referer': 'https://internshala.com/',
+        },
       },
     },
   },
