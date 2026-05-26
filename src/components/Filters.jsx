@@ -135,8 +135,8 @@ const Filters = () => {
       {/* Primary Filters Card */}
       <div className="filters-card">
         {/* Header Title with Blue Funnel Icon & Mobile Close button */}
-        <div className="filters-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px', width: '100%' }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div className="filters-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', width: '100%', position: 'relative' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <CustomFilterIcon />
             <span style={{ fontSize: '15px', fontWeight: '700', color: '#212529' }}>Filters</span>
           </div>
@@ -145,7 +145,7 @@ const Filters = () => {
             className="filters-close-btn-mobile"
             onClick={() => setIsMobileFiltersOpen(false)}
             aria-label="Close Filters"
-            style={{ display: 'none', alignItems: 'center', justifyContent: 'center', fontSize: '20px', color: '#666', cursor: 'pointer' }}
+            style={{ display: 'none', alignItems: 'center', justifyContent: 'center', fontSize: '20px', color: '#666', cursor: 'pointer', position: 'absolute', right: '0', top: '50%', transform: 'translateY(-50%)' }}
           >
             <FiX />
           </button>
