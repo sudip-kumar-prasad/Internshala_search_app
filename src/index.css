@@ -870,3 +870,61 @@ input, select {
   font-weight: 400;
   color: #666666;
 }
+
+/* Filter Dropdown Styling */
+.filter-group {
+  position: relative;
+}
+
+.filter-dropdown {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1500;
+}
+
+.filter-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filter-dropdown::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.filter-dropdown::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+.filter-dropdown::-webkit-scrollbar-thumb:hover {
+  background: #bbb;
+}
+
+.filter-dropdown-item {
+  padding: 10px 14px;
+  font-size: 13.5px;
+  color: #333333;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.filter-dropdown-item:hover {
+  background-color: #e0f7ff;
+  color: #008BDC;
+  font-weight: 500;
+}
+
+.filter-dropdown-item.selected {
+  background-color: #e0f7ff;
+  color: #008BDC;
+  font-weight: 600;
+}

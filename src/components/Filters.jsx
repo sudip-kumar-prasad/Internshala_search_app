@@ -1,6 +1,53 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useFilters } from '../context/FilterContext';
 import { FiSearch, FiChevronDown, FiX } from 'react-icons/fi';
+
+const ALL_PROFILES = [
+  ".NET Development",
+  "3D Printing",
+  "AI Agent Development",
+  "Accounts",
+  "Acting",
+  "Aerospace Engineering",
+  "Agriculture & Food Engineering",
+  "Analytics",
+  "Android App Development",
+  "Big Data",
+  "Blockchain",
+  "Business Development",
+  "Content Writing",
+  "Data Science",
+  "Digital Marketing",
+  "Flutter Development",
+  "Front End Development",
+  "Full Stack Development",
+  "Graphic Design",
+  "Human Resources (HR)",
+  "Java Development",
+  "Marketing",
+  "Mobile App Development",
+  "Node.js Development",
+  "Python Development",
+  "ReactJS Development",
+  "Software Development Engineering (Web)",
+  "UI/UX Design",
+  "Web Development"
+];
+
+const ALL_LOCATIONS = [
+  "Bangalore",
+  "Chennai",
+  "Delhi",
+  "Gurgaon",
+  "Hyderabad",
+  "Jaipur",
+  "Kolkata",
+  "Lucknow",
+  "Mumbai",
+  "Munnar",
+  "Noida",
+  "Pune"
+];
 
 const CustomFilterIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '8px', marginTop: '1px' }}>
@@ -36,10 +83,37 @@ const Filters = () => {
     clearAllFilters,
   } = useFilters();
 
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
+
+  const profileRef = useRef(null);
+  const locationRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setShowProfileDropdown(false);
+      }
+      if (locationRef.current && !locationRef.current.contains(event.target)) {
+        setShowLocationDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleClearAll = (e) => {
     e.preventDefault();
     clearAllFilters();
   };
+
+  const filteredProfiles = ALL_PROFILES.filter(p =>
+    p.toLowerCase().includes(profile.toLowerCase())
+  );
+
+  const filteredLocations = ALL_LOCATIONS.filter(l =>
+    l.toLowerCase().includes(location.toLowerCase())
+  );
 
   return (
     <div className="filters-sidebar">
@@ -71,30 +145,80 @@ const Filters = () => {
         </div>
 
         {/* Profile Filter */}
-        <div className={`filter-group ${preferences ? 'disabled' : ''}`}>
+        <div className={`filter-group ${preferences ? 'disabled' : ''}`} ref={profileRef}>
           <label className="filter-label">Profile</label>
           <input
             type="text"
             className="filter-input"
             value={profile}
-            onChange={(e) => setProfile(e.target.value)}
+            onChange={(e) => {
+              setProfile(e.target.value);
+              setShowProfileDropdown(true);
+            }}
+            onFocus={() => setShowProfileDropdown(true)}
             placeholder="e.g. Marketing"
             disabled={preferences}
           />
+          {showProfileDropdown && !preferences && (
+            <div className="filter-dropdown">
+              {filteredProfiles.map((pOption) => (
+                <div
+                  key={pOption}
+                  className={`filter-dropdown-item ${profile.toLowerCase() === pOption.toLowerCase() ? 'selected' : ''}`}
+                  onClick={() => {
+                    setProfile(pOption);
+                    setShowProfileDropdown(false);
+                  }}
+                >
+                  {pOption}
+                </div>
+              ))}
+              {filteredProfiles.length === 0 && (
+                <div className="filter-dropdown-item" style={{ color: '#888', cursor: 'default' }}>
+                  No profiles found
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Location Filter */}
-        <div className={`filter-group ${preferences ? 'disabled' : ''}`}>
+        <div className={`filter-group ${preferences ? 'disabled' : ''}`} ref={locationRef}>
           <label className="filter-label">Location</label>
           <input
             type="text"
             className="filter-input"
             value={location}
-            onChange={(e) => setLocation(e.target.value)}
+            onChange={(e) => {
+              setLocation(e.target.value);
+              setShowLocationDropdown(true);
+            }}
+            onFocus={() => setShowLocationDropdown(true)}
             placeholder="e.g. Delhi"
             disabled={wfh || preferences}
             style={(wfh || preferences) ? { backgroundColor: '#f9f9f9', cursor: 'not-allowed', color: '#b0b0b0' } : {}}
           />
+          {showLocationDropdown && !wfh && !preferences && (
+            <div className="filter-dropdown">
+              {filteredLocations.map((lOption) => (
+                <div
+                  key={lOption}
+                  className={`filter-dropdown-item ${location.toLowerCase() === lOption.toLowerCase() ? 'selected' : ''}`}
+                  onClick={() => {
+                    setLocation(lOption);
+                    setShowLocationDropdown(false);
+                  }}
+                >
+                  {lOption}
+                </div>
+              ))}
+              {filteredLocations.length === 0 && (
+                <div className="filter-dropdown-item" style={{ color: '#888', cursor: 'default' }}>
+                  No locations found
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Checkboxes: Internships in my city, Work from home, Part-time */}
