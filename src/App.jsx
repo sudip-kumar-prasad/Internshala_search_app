@@ -256,12 +256,6 @@ function SearchDashboard() {
 
   return (
     <div className="page-wrapper">
-      {/* Breadcrumb path matching exactly */}
-      <div className="breadcrumb">
-        <a href="#home" onClick={(e) => e.preventDefault()}>Home</a>
-        <span>&gt;</span>
-        <a href="#internships" style={{ color: '#333333', fontWeight: '500' }} onClick={(e) => e.preventDefault()}>Internships</a>
-      </div>
 
       {/* Sidebar + Result Area Layout */}
       <div className="content-layout">
