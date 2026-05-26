@@ -223,6 +223,26 @@ input, select {
   position: sticky;
   top: 84px; /* Keep it perfectly below the 68px sticky header */
   align-self: flex-start; /* Crucial so it does not stretch vertically */
+  max-height: calc(100vh - 104px);
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.filters-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.filters-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.filters-sidebar::-webkit-scrollbar-thumb {
+  background: #dee2e6;
+  border-radius: 4px;
+}
+
+.filters-sidebar::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
 }
 
 .filters-card {
