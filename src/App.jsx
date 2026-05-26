@@ -96,6 +96,12 @@ function SearchDashboard() {
     stipend,
     searchQuery,
     preferences,
+    startDate,
+    maxDuration,
+    jobOffer,
+    fastResponse,
+    earlyApplicant,
+    forWomen,
   } = useFilters();
 
   // Fetch data on mount
@@ -151,6 +157,15 @@ function SearchDashboard() {
 
   // Comprehensive client-side filtering logic
   const filteredInternships = useMemo(() => {
+    const getDurationInMonths = (durStr) => {
+      if (!durStr) return 0;
+      const str = durStr.toLowerCase();
+      const match = str.match(/(\d+)\s*month/);
+      if (match) return parseInt(match[1]);
+      if (str.includes("week")) return 0.25;
+      return 0;
+    };
+
     return internships.filter((item) => {
       // If preferences is active, we ignore profile/location/wfh/part-time inputs as they are disabled in UI
       if (!preferences) {
@@ -197,7 +212,33 @@ function SearchDashboard() {
         if (salaryVal < stipend) return false;
       }
 
-      // 6. General Keyword Search (Query matching multiple fields) - active even in preferences mode
+      // 6. Max Duration Filter
+      if (maxDuration) {
+        const maxD = parseInt(maxDuration);
+        const itemD = getDurationInMonths(item.duration);
+        if (itemD > maxD) return false;
+      }
+
+      // 7. Job Offer Filter
+      if (jobOffer && !item.is_ppo) {
+        return false;
+      }
+
+      // 8. Early Applicant Filter
+      if (earlyApplicant && !item.is_early_applicant) {
+        return false;
+      }
+
+      // 9. Internships for Women Filter
+      if (forWomen) {
+        const desc = item.description ? item.description.toLowerCase() : "";
+        const title = item.title ? item.title.toLowerCase() : "";
+        if (!item.for_women && !desc.includes("women") && !title.includes("women")) {
+          return false;
+        }
+      }
+
+      // 10. General Keyword Search (Query matching multiple fields) - active even in preferences mode
       if (searchQuery) {
         const sQuery = searchQuery.toLowerCase();
         const titleMatches = item.title ? item.title.toLowerCase().includes(sQuery) : false;
@@ -211,7 +252,7 @@ function SearchDashboard() {
 
       return true;
     });
-  }, [internships, profile, location, wfh, partTime, stipend, searchQuery, preferences]);
+  }, [internships, profile, location, wfh, partTime, stipend, searchQuery, preferences, startDate, maxDuration, jobOffer, fastResponse, earlyApplicant, forWomen]);
 
   return (
     <div className="page-wrapper">

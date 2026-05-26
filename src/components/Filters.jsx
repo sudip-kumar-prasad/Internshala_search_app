@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useFilters } from '../context/FilterContext';
-import { FiSearch, FiChevronDown, FiX } from 'react-icons/fi';
+import { FiSearch, FiChevronDown, FiChevronUp, FiX } from 'react-icons/fi';
 
 const ALL_PROFILES = [
   ".NET Development",
@@ -80,11 +80,24 @@ const Filters = () => {
     setPreferences,
     inMyCity,
     setInMyCity,
+    startDate,
+    setStartDate,
+    maxDuration,
+    setMaxDuration,
+    jobOffer,
+    setJobOffer,
+    fastResponse,
+    setFastResponse,
+    earlyApplicant,
+    setEarlyApplicant,
+    forWomen,
+    setForWomen,
     clearAllFilters,
   } = useFilters();
 
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showLocationDropdown, setShowLocationDropdown] = useState(false);
+  const [showMoreFilters, setShowMoreFilters] = useState(false);
 
   const profileRef = useRef(null);
   const locationRef = useRef(null);
@@ -286,14 +299,106 @@ const Filters = () => {
           </div>
         </div>
 
-        {/* View More Filters */}
-        <div className="view-more-link">
-          <span>View more filters</span>
-          <FiChevronDown style={{ fontSize: '12px' }} />
+        {/* View More Filters Toggle */}
+        <div className="view-more-link" onClick={() => setShowMoreFilters(!showMoreFilters)}>
+          <span>{showMoreFilters ? "View less filters" : "View more filters"}</span>
+          {showMoreFilters ? (
+            <FiChevronUp style={{ fontSize: '12px' }} />
+          ) : (
+            <FiChevronDown style={{ fontSize: '12px' }} />
+          )}
         </div>
 
+        {/* More Filters Section */}
+        {showMoreFilters && (
+          <div className="more-filters-container" style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid #eee' }}>
+            {/* Starting from (or after) */}
+            <div className="filter-group">
+              <label className="filter-label">Starting from (or after)</label>
+              <input
+                type="date"
+                className="filter-input"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                placeholder="Choose date"
+                style={{ color: startDate ? '#333' : '#b0b0b0' }}
+              />
+            </div>
+
+            {/* Max. duration (months) */}
+            <div className="filter-group">
+              <label className="filter-label">Max. duration (months)</label>
+              <select
+                className="filter-input"
+                value={maxDuration}
+                onChange={(e) => setMaxDuration(e.target.value)}
+                style={{ color: maxDuration ? '#333' : '#b0b0b0', appearance: 'none', background: 'url("data:image/svg+xml;utf8,<svg fill=\'%23888888\' height=\'24\' viewBox=\'0 0 24 24\' width=\'24\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M7 10l5 5 5-5z\'/><path d=\'M0 0h24v24H0z\' fill=\'none\'/></svg>") no-repeat right 10px center', paddingRight: '30px', backgroundColor: '#fff' }}
+              >
+                <option value="" disabled hidden>Choose duration</option>
+                <option value="1">1 Month</option>
+                <option value="2">2 Months</option>
+                <option value="3">3 Months</option>
+                <option value="4">4 Months</option>
+                <option value="5">5 Months</option>
+                <option value="6">6 Months</option>
+              </select>
+            </div>
+
+            {/* Checkboxes: Internships with job offer, Fast response, Early applicant, Internships for women */}
+            <div className="filter-group" style={{ margin: '20px 0 16px' }}>
+              <label className="filter-checkbox">
+                <input
+                  type="checkbox"
+                  checked={jobOffer}
+                  onChange={(e) => setJobOffer(e.target.checked)}
+                />
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  Internships with job offer 
+                  <span style={{ fontSize: '11px', color: '#888', border: '1px solid #bbb', borderRadius: '50%', width: '13px', height: '13px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }} title="PPO offered post internship">?</span>
+                </span>
+              </label>
+
+              <label className="filter-checkbox">
+                <input
+                  type="checkbox"
+                  checked={fastResponse}
+                  onChange={(e) => setFastResponse(e.target.checked)}
+                />
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  Fast response
+                  <span style={{ fontSize: '11px', color: '#888', border: '1px solid #bbb', borderRadius: '50%', width: '13px', height: '13px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }} title="Recruiters respond quickly">?</span>
+                </span>
+              </label>
+
+              <label className="filter-checkbox">
+                <input
+                  type="checkbox"
+                  checked={earlyApplicant}
+                  onChange={(e) => setEarlyApplicant(e.target.checked)}
+                />
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  Early applicant
+                  <span style={{ fontSize: '11px', color: '#888', border: '1px solid #bbb', borderRadius: '50%', width: '13px', height: '13px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }} title="Be among the first to apply">?</span>
+                </span>
+              </label>
+
+              <label className="filter-checkbox">
+                <input
+                  type="checkbox"
+                  checked={forWomen}
+                  onChange={(e) => setForWomen(e.target.checked)}
+                />
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  Internships for women
+                  <span style={{ fontSize: '11px', color: '#888', border: '1px solid #bbb', borderRadius: '50%', width: '13px', height: '13px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }} title="Special opportunities for women">?</span>
+                </span>
+              </label>
+            </div>
+          </div>
+        )}
+
         {/* Clear All Link at bottom right */}
-        {(profile || location || wfh || partTime || stipend > 0 || searchQuery || preferences || inMyCity) && (
+        {(profile || location || wfh || partTime || stipend > 0 || searchQuery || preferences || inMyCity || startDate || maxDuration || jobOffer || fastResponse || earlyApplicant || forWomen) && (
           <span className="clear-all-link" onClick={handleClearAll}>
             Clear all
           </span>

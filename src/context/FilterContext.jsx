@@ -13,6 +13,14 @@ export const FilterProvider = ({ children }) => {
   const [preferences, setPreferences] = useState(false);
   const [inMyCity, setInMyCity] = useState(false);
 
+  // Additional filter states
+  const [startDate, setStartDate] = useState('');
+  const [maxDuration, setMaxDuration] = useState('');
+  const [jobOffer, setJobOffer] = useState(false);
+  const [fastResponse, setFastResponse] = useState(false);
+  const [earlyApplicant, setEarlyApplicant] = useState(false);
+  const [forWomen, setForWomen] = useState(false);
+
   const clearAllFilters = useCallback(() => {
     setProfile('');
     setLocation('');
@@ -23,6 +31,12 @@ export const FilterProvider = ({ children }) => {
     setSearchQuery('');
     setPreferences(false);
     setInMyCity(false);
+    setStartDate('');
+    setMaxDuration('');
+    setJobOffer(false);
+    setFastResponse(false);
+    setEarlyApplicant(false);
+    setForWomen(false);
   }, []);
 
   const value = {
@@ -44,6 +58,18 @@ export const FilterProvider = ({ children }) => {
     setPreferences,
     inMyCity,
     setInMyCity,
+    startDate,
+    setStartDate,
+    maxDuration,
+    setMaxDuration,
+    jobOffer,
+    setJobOffer,
+    fastResponse,
+    setFastResponse,
+    earlyApplicant,
+    setEarlyApplicant,
+    forWomen,
+    setForWomen,
     clearAllFilters,
   };
 
