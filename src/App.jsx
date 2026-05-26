@@ -222,6 +222,12 @@ function SearchDashboard() {
         <a href="#internships" style={{ color: '#333333', fontWeight: '500' }} onClick={(e) => e.preventDefault()}>Internships</a>
       </div>
 
+      {/* Centered Total Internships Heading */}
+      <div className="total-count-heading">
+        <h1>{loading ? "..." : `${filteredInternships.length} Total Internships`}</h1>
+        <p>Latest Summer Internships</p>
+      </div>
+
       {/* Sidebar + Result Area Layout */}
       <div className="content-layout">
         {/* Filters Sidebar */}

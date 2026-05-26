@@ -850,3 +850,23 @@ input, select {
     display: none;
   }
 }
+
+/* Centered Total Internships Heading Styling */
+.total-count-heading {
+  text-align: center;
+  margin: 32px 0 24px 0;
+}
+
+.total-count-heading h1 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 8px;
+  letter-spacing: -0.2px;
+}
+
+.total-count-heading p {
+  font-size: 14px;
+  font-weight: 400;
+  color: #666666;
+}
