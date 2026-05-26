@@ -223,6 +223,7 @@ input, select {
   position: sticky;
   top: 84px; /* Keep it perfectly below the 68px sticky header */
   align-self: flex-start; /* Crucial so it does not stretch vertically */
+  padding-top: 24px; /* Align with the Total Internships heading */
 }
 
 .filters-card {
@@ -854,7 +855,7 @@ input, select {
 /* Centered Total Internships Heading Styling */
 .total-count-heading {
   text-align: center;
-  margin: 32px 0 24px 0;
+  margin: 24px 0 20px 0;
 }
 
 .total-count-heading h1 {
