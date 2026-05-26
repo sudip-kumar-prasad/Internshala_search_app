@@ -226,6 +226,7 @@ input, select {
   max-height: calc(100vh - 104px);
   overflow-y: auto;
   padding-right: 6px;
+  margin-top: 84px; /* Align with first card below heading */
 }
 
 .filters-sidebar::-webkit-scrollbar {
@@ -860,6 +861,7 @@ input, select {
 
   .filters-sidebar {
     width: 100%;
+    margin-top: 0;
   }
 
   .header-inner {
@@ -874,7 +876,10 @@ input, select {
 /* Centered Total Internships Heading Styling */
 .total-count-heading {
   text-align: center;
-  margin: 12px 0 28px 0;
+  margin-bottom: 24px;
+  padding-top: 12px;
+  height: 48px;
+  box-sizing: content-box;
 }
 
 .total-count-heading h1 {
